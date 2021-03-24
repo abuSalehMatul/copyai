@@ -67,7 +67,7 @@ class HomeController extends Controller
                 } elseif ($shop->status == 'installed') {
                     //shop is installed so redirect it to embedded section.......
                     $stateToken = $shop->state_token;
-                    $allProductUpload = $this->allUploaded($shop);;
+                    $allProductUpload = $this->allUploaded($shop->my_shopify_domain);
                     $shop = $myShopifyDomain;
                     
                     return view('home', compact(['shop', 'stateToken', 'allProductUpload']));
@@ -89,6 +89,12 @@ class HomeController extends Controller
         if (preg_match($this->UrlPattern, $myShopifyDomain)) {
             if ($shop->state_token != $state) {
                 return "Not Authorized";
+            }
+            if($shop->status == 'installed'){
+                $allProductUpload = $this->allUploaded($shop->my_shopify_domain);
+                return view('home')->with('shop', $shop->my_shopify_domain)
+                ->with('stateToken', $shop->state_token)
+                ->with('allProductUpload', $allProductUpload);
             }
 
             $accessTokenResult = json_decode($this->apiService->getAccesToken($code, $this->shopifyApiKey, $this->shopifyApiSecret, $myShopifyDomain), true);
@@ -152,7 +158,7 @@ class HomeController extends Controller
             ->delay(now()->addSeconds(8));
 
             $stateToken = $shop->state_token;
-            $allProductUpload = $this->allUploaded($shop);
+            $allProductUpload = $this->allUploaded($myShopifyDomain);
             $shop = $myShopifyDomain;
             return view('home', compact(['shop', 'stateToken', 'allProductUpload']));
         }
