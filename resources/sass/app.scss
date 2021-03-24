@@ -1,0 +1,16 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+
+@import 'variables';
+@import 'constant';
+@import 'range';
+.right-0{
+    right: 0;
+}
+.font-weight-600{
+    font-weight: 600;
+}

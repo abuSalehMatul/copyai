@@ -1,0 +1,201 @@
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .pl-col-0{
+        padding-left: 0;
+    }
+    .pr-col-0{
+        padding-right: 0;
+    }
+    .col-mb-3{
+        margin-bottom: 1rem !important;
+    }
+    .arrow-icon {
+        right: 0 !important;
+    }
+    .arrow-down{
+        display: block;
+        height: 39px;
+        padding: 6px;
+        margin-bottom: -10px;
+    }
+    .step-indicator {
+        padding: 0 0 0 9px !important;
+    }
+    .arrow-icon {
+        display: none !important;
+    }
+    .arrow-icon2{
+        display: none !important;
+    }
+    #taggedWithDiv{
+        display: none !important;
+    }
+    .cog-icon{
+        display: none;
+    }
+    .Polaris-Button__Icon:first-child {
+        margin-left: 0 !important;
+    }
+    .optimized-text{
+        display: none !important;
+    }
+    .operation-description-up{
+        display: block;
+    }
+    .operation-description-down{
+        display: none;
+    }
+    .big-no-img-div{
+        margin: auto;
+    }
+    .setting-tone-button{
+        padding-right: 0;
+    }
+    .setting-item-mob-padding{
+        padding-right: 1.1rem;
+    }
+    .reducing-gap{
+        position: relative;
+        left: 30px;
+    }
+    .optimized-copies{
+        margin-top: 50px;
+    }
+    .max-widht-9 {
+        max-width: 25%;
+        margin-top: 5%;
+    }
+    .hide-in-mobile{
+        display: none;
+    }
+    .abtest-initial-div {
+        height: 100%;
+    }
+    .ab-variable-text-action{
+        margin-top: 10px;
+    }
+    .header-option-text{
+        text-align: center;
+        font-weight: 500;
+    }
+    
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .publish-box-sticky{
+        position: sticky;
+        top: 1px;
+    }
+
+    .image-left-side{
+        position: sticky;
+        top: 10px;
+    }
+    
+    .operation-description-up{
+        display: none;
+    }
+    .operation-description-down{
+        display: block;
+    }
+    .arrow-down{
+        display: none;
+    }
+    .pl-md-2rem{
+        padding-left: 2rem !important;
+    }
+    #taggedWithDiv{
+        display: none !important;
+    }
+    .ab-variable-text-action{
+        margin-top: 40px;
+    }
+    .header-option-text{
+        text-align: center;
+        font-weight: 500;
+    }
+    .max-widht-9 {
+        max-width: 24%;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    #taggedWithDiv{
+        display: inline-block !important;
+    }
+    .arrow-down{
+        display: none;
+    }
+    .pl-md-2rem{
+        padding-left: 2rem !important;
+    }
+    .reducing-gap{
+        position: relative;
+        left: 0;
+    }
+    .max-widht-9{
+        max-width: 24%;
+    }
+    .abtest-initial-div{
+        height: 100%;
+        padding: 5px 0;
+    }
+    .ab-variable-text-action{
+        margin-top: 40px;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .header-option-text{
+        text-align: center;
+        font-weight: 500;
+    }
+    .max-widht-9{
+        max-width: 12%;
+    }
+    .arrow-down{
+        display: none;
+    }
+    .reducing-gap{
+        position: relative;
+        left: 15px;
+    }
+    .m-l-md-header{
+        margin-left: 13%;
+    }
+    .border-left-pulishpage{
+        border-left: 1px solid #ababab;;
+    }
+    .header-item-height{
+        height: 80px;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .pl-md-2rem{
+        padding-left: 2rem !important;
+    }
+    .arrow-down{
+        display: none;
+    }
+    .stock-count-div{
+        padding-left: 25px;
+    }
+    .product-type{
+        transform: translateY(100%);
+    }
+    .translateY100{
+        transform: translateY(100%);
+    }
+    .pagination-info{
+        transform: translateY(45%);
+    }
+    .reducing-gap{
+        position: relative;
+        left: 15px;
+    }
+}

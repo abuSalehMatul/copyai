@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+.Polaris-Button--primary{
+    background: #160647 !important;
+    border: 1px solid #160647 !important;
+    box-shadow: inset 0 1px 0 0 #160647, 0 1px 0 0 rgb(22 29 37 / 5%), 0 0 0 0 transparent !important;
+
+}
+.s-welcome{
+    color: #67c4c0;
+    font-size: 22px;
+    font-weight: 700;
+}
+.s-greeting{
+    font-weight: 700;
+    font-size: 25px;
+}
+.s-short-des{
+    font-weight: 500;    
+}
+.p-btn{
+    align-items: center;
+    justify-content: center;
+    min-height: 3.6rem;
+    min-width: 3.6rem;
+    margin: 0;
+    padding: 0.7rem 1.6rem;
+    background: #160647 !important;
+    border: 1px solid #160647 !important;
+    box-shadow: inset 0 1px 0 0 #160647, 0 1px 0 0 rgb(22 29 37 / 5%), 0 0 0 0 transparent !important;
+    color: white;
+    position: relative;
+    font-weight: 600;
+}
+.operation-svg{
+    height: 65px;
+    border-radius: 50%;
+    padding: 8px;
+}
+
+.operation-svg-active{
+    background: #67c4c0;
+}
+.input-store-name-suff{
+    position: relative;
+    right: 16px;
+    margin-left: -97px;
+    margin-top: 7px;
+    z-index: 100;
+}
+.icon{
+    position: relative;
+}
+.operation-title{
+    font-size: 19px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.step-svg-container{
+    width: 65px;
+    margin: auto;
+}
+@media only screen and (max-width: 600px) {
+   
+    .icon{
+        width: 43.4%;
+        margin: auto;
+    }
+    .step-icon-div{
+        margin-top: 40px;
+    }
+    .take-input-div{
+        margin-top: 70px;
+    }
+    .input-store-name-suff{
+        display: none;
+    }
+    .input-store-name {
+        position: relative;
+        margin-bottom: 10px;
+        padding: 4px;
+    }
+   
+}
+@media only screen and (min-width: 1200px) {
+    .main-fram{
+        padding-top: 40px;
+    }
+    .icon{
+        width: 12.4%;
+        margin: auto;
+    }
+    .step-icon-div{
+        margin-top: 40px;
+    }
+    .take-input-div{
+        margin-top: 50px;
+    }
+    .input-store-name{
+        position: relative;
+        right: 9px;
+    }
+   
+}

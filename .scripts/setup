@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# run this if you ll get permission denied error
+# chmod +x ./.scripts/setup
+
+set -e
+
+# Install Brew dependencies
+brew update
+
+# Install PHP Redis extension
+if ! pecl list | grep redis >/dev/null 2>&1; then
+    yes '' | pecl install -f redis
+fi
+
+# Install PHP MongoDB extension
+if ! pecl list | grep mongodb >/dev/null 2>&1; then
+    yes '' | pecl install -f mongodb
+fi
+#sudo pecl install mongodb
+
+
+# Install PHP imagick extension
+if ! pecl list | grep imagick >/dev/null 2>&1; then
+    yes '' | pecl install -f imagick
+fi
+
+#sed -i -e 's/memory_limit.*/memory_limit = 2048M/' "$(brew --prefix)/etc/php/7.4/conf.d/php-memory-limits.ini"
+
+# Make sure MySQL is always running
+brew services start mysql
+
+mysql -uroot <<EOF
+  CREATE USER IF NOT EXISTS 'module_backoffice'@'localhost' IDENTIFIED WITH mysql_native_password BY 'secret';
+  DROP DATABASE IF EXISTS module_backoffice;
+  CREATE DATABASE module_backoffice /*\!40100 DEFAULT CHARACTER SET utf8 */;
+  GRANT ALL PRIVILEGES ON module_backoffice.* TO 'module_backoffice'@'localhost';
+  DROP DATABASE IF EXISTS module_backoffice_test;
+  CREATE DATABASE module_backoffice_test /*\!40100 DEFAULT CHARACTER SET utf8 */;
+  GRANT ALL PRIVILEGES ON module_backoffice_test.* TO 'module_backoffice'@'localhost';
+  FLUSH PRIVILEGES;
+EOF
+
+brew services start elasticsearch-full
+brew services start redis
+
+# Install and setup Valet
+composer global require laravel/valet
+$HOME/.composer/vendor/bin/valet install
+
+# Install Composer dependencies
+COMPOSER_MEMORY_LIMIT=-1 composer install --ignore-platform-reqs
+
+# Install NPM dependencies
+npm install
+
+if [ ! -e .env ]; then
+    cp .env.example .env
+fi
+if [ ! -e .env.testing ]; then
+    cp .env.testing.example .env.testing
+fi
+
+$HOME/.composer/vendor/bin/valet link global-villages-bo
+$HOME/.composer/vendor/bin/valet unsecure global-villages-bo
+
+php artisan key:generate
+php artisan jwt:secret
+php artisan migrate --seed
+
+open https://global-villages-bo.test/admin

@@ -1,0 +1,158 @@
+name: build-docker-image
+on:
+  push:
+    paths:
+      - 'app/**'
+      - 'bootstrap/**'
+      - 'config/**'
+      - 'database/**'
+      - 'public/**'
+      - 'resources/**'
+      - 'routes/**'
+      - 'storage/**'
+      - 'tests/**'
+      - 'Dockerfile'
+      - 'composer.lock'
+    branches:
+      - '!*'
+      - 'develop'
+      - 'stage'
+      - 'master'
+
+env:
+  GH_PAT: ${{ secrets.GH_PAT }}
+  DOCKER_PAT: ${{ secrets.DOCKER_PAT }}
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  JENKINS_JOB_URL: ${{ secrets.JENKINS_JOB_URL }}
+  CI: true
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    timeout-minutes: 20
+
+    services:
+      redis:
+        image: redis:6-alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      mongodb:
+        image: mongo:4-bionic
+        ports:
+          - 27017:27017
+
+      elasticsearch:
+        image: blacktop/elasticsearch:7.10.1
+        ports:
+          - 9200:9200
+        options: -e="discovery.type=single-node"
+
+      mysql:
+        image: mysql:8.0.23
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: laravel
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          workflow_id: build-docker.yml
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 30
+          persist-credentials: false
+
+      - name: General
+        run: |
+          # comment
+          GIT_BRANCH=${{ github.ref }}
+          echo "REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}')" >> $GITHUB_ENV
+          echo "GIT_BRANCH=$(echo "${GIT_BRANCH/refs\/heads\//}")" >> $GITHUB_ENV
+          echo "COMMIT_DATE=$(git log -n 1 --pretty='format:%cd' --date=format:'%y-%m-%d')" >> $GITHUB_ENV
+          echo "GH_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
+          git config --global url."https://${{ env.GH_PAT }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+          git config --global url."https://${{ env.GH_PAT }}:x-oauth-basic@github.com/".insteadOf "ssh://git@github.com/"
+
+      - name: Login to DockerHub Package Repository
+        run: |
+          docker login --username botcopyai -p ${DOCKER_PAT}
+
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2 # https://github.com/shivammathur/setup-php
+        with:
+          php-version: 8.0.2
+          extensions: mbstring, dom, fileinfo, mysql
+          coverage: xdebug
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2.1.4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          # Use composer.json for key, if composer.lock is not committed.
+          # key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist --optimize-autoloader --ignore-platform-reqs
+
+      - name: Prepare the application
+        run: |
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
+          php artisan key:generate
+          chmod -R 777 storage bootstrap/cache
+          php artisan config:clear
+
+      - name: Run Migration
+        run: php artisan migrate -v
+
+      - name: Test with phpunit
+        run: vendor/bin/phpunit
+
+      - name: Build the Docker image
+        run: |
+          docker build --network=host --memory=8g --file Dockerfile -t app:latest . \
+          --build-arg GH_PAT=${GH_PAT} \
+          --build-arg BUILD_NR=$GIT_BRANCH-$GH_SHA_SHORT \
+          --build-arg BUILD_BRANCH=$GIT_BRANCH \
+          --build-arg BUILD_COMMIT=$GITHUB_SHA \
+          --build-arg BUILD_DATE=`date +%Y-%m-%d:%H:%M:%S`
+        timeout-minutes: 15
+
+      - name: Tag latest if master
+        if: github.ref == 'refs/heads/master'
+        run: |
+          # we push latest separate so it shows up as latest in the UI
+          docker tag app:latest copyai/$REPOSITORY_NAME:latest
+          docker push copyai/$REPOSITORY_NAME:latest
+
+      - name: Tag branch with branchName-commitDate
+        run: |
+          docker tag app:latest copyai/$REPOSITORY_NAME:$GIT_BRANCH-$COMMIT_DATE-$GH_SHA_SHORT
+          docker push copyai/$REPOSITORY_NAME:$GIT_BRANCH-$COMMIT_DATE-$GH_SHA_SHORT
+          curl --write-out '%{http_code}' --output /dev/null "$JENKINS_JOB_URL$GIT_BRANCH&op=build-image&image=copyai/$REPOSITORY_NAME&version=$GIT_BRANCH-$COMMIT_DATE-$GH_SHA_SHORT&branch=$GIT_BRANCH" || true
+
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: ${{ github.repository }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+          mention: 'here'
+          if_mention: 'failure'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if: always()

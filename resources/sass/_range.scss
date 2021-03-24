@@ -1,0 +1,33 @@
+@media only screen and (min-width: 600px) and(max-width:1000px) {
+    .step-indicator {
+        display: block;
+        padding: 8px 0 0 0px;
+        font-size: 17px;
+        font-weight: 500;
+    }
+    .Polaris-Button__Content {
+        font-size: 1.3rem !important;
+    }
+    .dropdown-toggle::after {
+        margin-left: 0.3em;
+        font-size: 14px;
+        /* vertical-align: middle; */
+    }
+    .stock-count-div{
+        padding-left: 4px;
+    }
+   
+}
+
+@media only screen and (min-width: 300px) and (max-width: 350px){
+    .reducing-gap{
+        position: relative;
+        left: 4%;
+    }
+}
+@media only screen and (min-width: 351px) and (max-width: 500px){
+    .reducing-gap{
+        position: relative;
+        left: 11%;
+    }
+}
