@@ -44,8 +44,8 @@ return [
         ],
         'mongodb' => [
             'driver' => 'mongodb',
-            'dsn' => env('MONGODB_DEFAULT_DSN', 'mongodb://0.0.0.0:27017/tool-shopify-app'),
-            'database' => env('MONGODB_DEFAULT_DB', 'tool-shopify-app'),
+            'dsn' => 'mongodb+srv://matulaiva:72226maat@cluster0.qb2fl.mongodb.net/aispec?retryWrites=true&w=majority&serverSelectionTryOnce=false&serverSelectionTimeoutMS=30000',
+            'database' => 'aispec',
         ],
 
         'mysql' => [
