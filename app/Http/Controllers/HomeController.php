@@ -88,7 +88,7 @@ class HomeController extends Controller
         $shop = $this->shopModel->getOrCreateShopByMyshopifydomain($myShopifyDomain);
         if (preg_match($this->UrlPattern, $myShopifyDomain)) {
             if ($shop->state_token != $state) {
-                return "Not Authorized";
+                return "The App is already installed";
             }
             if($shop->status == 'installed'){
                 $allProductUpload = $this->allUploaded($shop->my_shopify_domain);

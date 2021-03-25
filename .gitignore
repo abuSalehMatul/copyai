@@ -12,4 +12,5 @@ npm-debug.log
 yarn-error.log
 .env
 .idea/
-
+/config/shopify.php
+/config/database.php
