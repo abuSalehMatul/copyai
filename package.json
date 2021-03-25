@@ -28,7 +28,7 @@
     "dependencies": {
         "@shopify/polaris": "^6.1.0",
         "@shopify/polaris-icons": "^4.5.0",
-        "@tinymce/tinymce-react": "^3.10.4",
+        "@tinymce/tinymce-react": "^3.11.1",
         "chart.js": "^2.9.4",
         "html-react-parser": "^1.2.4",
         "laravel-echo": "^1.10.0",

@@ -159,8 +159,13 @@ class HomeController extends Controller
 
             $stateToken = $shop->state_token;
             $allProductUpload = $this->allUploaded($myShopifyDomain);
-            $shop = $myShopifyDomain;
-            return view('home', compact(['shop', 'stateToken', 'allProductUpload']));
+            //$shop = $myShopifyDomain;
+
+            $appDashboard = "https://$myShopifyDomain/admin/apps/{$this->shopifyApiKey}";
+
+            return Redirect::to($appDashboard);
+            // return view('home', compact(['shop', 'stateToken', 'allProductUpload']));
+            // https://{myshopify_domain}/admin/apps/{shopify_app_config_api_key}
         }
     }
 

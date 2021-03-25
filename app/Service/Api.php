@@ -10,7 +10,7 @@ class Api
 {
   use ShopManager;
 
-  //// get description from copy.ai service .... 
+  //// get description from copy.ai service ....
   public function getDescription($currentDescription, $currentTitle, $format, $tone, $industry)
   {
     if($tone == "") $tone = "friendly";
@@ -73,9 +73,9 @@ class Api
   }
 
 
-  //get orders .. orders are fetching with order api with pagination. where 
+  //get orders .. orders are fetching with order api with pagination. where
   // each page contain 250 order, and we itterate untill the last page.....
-  // we will concatinate a page data with it's next pages's data. and in the end we 
+  // we will concatinate a page data with it's next pages's data. and in the end we
   //will format it in a array
   public function getOpenedOrders($shop, $token)
   {
@@ -144,7 +144,7 @@ class Api
       }
     }
 
-    $finalArr = $finalArr . ']'; 
+    $finalArr = $finalArr . ']';
 
     $OrderManager = new OrderManager($shop);
     if(is_array($finalArr)) $OrderManager->handleMultipleOrder(json_decode($finalArr)); // save order to db...
@@ -152,9 +152,9 @@ class Api
   }
 
 
-   //get customers .. customers are fetching with customer api with pagination. where 
+   //get customers .. customers are fetching with customer api with pagination. where
   // each page contain 250 customer, and we itterate untill the last page.....
-  // we will concatinate a page's data with it's next pages's data. and in the end we 
+  // we will concatinate a page's data with it's next pages's data. and in the end we
   //will format it in a array
   public function getCustomers($shop, $token)
   {
@@ -229,9 +229,9 @@ class Api
   }
 
 
-   //get products .. products are fetching with product api with pagination. where 
+   //get products .. products are fetching with product api with pagination. where
   // each page contain 250 products, and we itterate untill the last page.....
-  // we will concatinate a page's data with it's next pages's data. and in the end we 
+  // we will concatinate a page's data with it's next pages's data. and in the end we
   //will format it in a array
   public function getProduct($shop, $token)
   {
@@ -280,6 +280,7 @@ class Api
         $nextPage = ""; // if missing "link" parameter - there's only one page of results = last_page
 
       }
+
       //response is a string, so we will take out only the necessary data, and arrange it in a way so that it product an array
       
       $response = json_decode($response);
@@ -292,7 +293,7 @@ class Api
   }
 
 
-  //get shop details with graphql.. 
+  //get shop details with graphql..
   function getShopDetails($shop, $access_token)
   {
     $url = "https://{$shop}/admin/api/2019-10/graphql.json";
@@ -312,9 +313,9 @@ class Api
               address1
               province
               phone
-            } 
+            }
             myshopifyDomain
-            timezoneAbbreviation  
+            timezoneAbbreviation
             currencyCode
             contactEmail
             email
@@ -390,7 +391,7 @@ class Api
   }
 
 
-  //update stores metafield values through shopify admin metafield api... 
+  //update stores metafield values through shopify admin metafield api...
   public function updateMetaField($myShopifyDomain, $description, $random)
   {
     $shop = $this->getOrCreateShopByMyshopifydomain($myShopifyDomain);
@@ -439,3 +440,6 @@ class Api
     return $body;
   }
 }
+
+
+#

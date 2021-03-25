@@ -28,7 +28,7 @@ export class ProductSyncing extends Component {
     }
 
     reloadTheApp() {
-        document.location.href = "/getEmbedded?shop";
+        document.location.href = document.location.href;
     }
 
     getData() {
